@@ -48,3 +48,4 @@
         @inertia
     </body>
 </html>
+

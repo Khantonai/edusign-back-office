@@ -6,11 +6,41 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
+
+    // reenforce the role of the user
+    const ROLE_STUDENT = 'student';
+    const ROLE_PROFESSOR = 'professor';
+
+    public function isProfessor()
+    {
+        return $this->role === self::ROLE_PROFESSOR;
+    }
+
+    public function isStudent()
+    {
+        return $this->role === self::ROLE_STUDENT;
+    }
+
+    public function coursesTaught()
+    {
+        return $this->hasMany(Course::class);
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class);
+    }
+
+    public function presences()
+    {
+        return $this->hasMany(\App\Models\Presence::class);
+    }
 
     /**
      * The attributes that are mass assignable.
