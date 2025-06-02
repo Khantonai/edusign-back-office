@@ -21,11 +21,21 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function CourseShow() {
   const course = usePage().props.course as unknown as Course;
   const [tokenData, setTokenData] = useState('');
+  const [students, setStudents] = useState(course.students);
 
   const generateQR = () => {
     axios.post('/courses/generate-token', { course_id: course.id }).then(res => {
       setTokenData(res.data);
     });
+  };
+
+  const refreshCourse = async () => {
+    try {
+      const res = await axios.get(`/api/courses/${course.id}`);
+      setStudents(res.data.students);
+    } catch (error) {
+      console.error('Erreur lors du rafraîchissement du cours');
+    }
   };
 
   const handleSign = async (studentId: number) => {
@@ -34,6 +44,7 @@ export default function CourseShow() {
         course_id: course.id,
         student_id: studentId
       });
+      await refreshCourse();
       generateQR(); // refresh token & UI
     } catch (error) {
       alert('Erreur lors de la signature');
@@ -46,6 +57,7 @@ export default function CourseShow() {
         course_id: course.id,
         student_id: studentId
       });
+      await refreshCourse();
       generateQR(); // refresh token & UI
     } catch (error) {
       alert('Erreur lors de la révocation');
@@ -85,7 +97,7 @@ export default function CourseShow() {
           <div style={{display: "flex", flexDirection: "column", overflow: "hidden"}}>
             <p>Étudiants inscrits</p>
             <ul id='course-student-list'>
-              {course?.students?.map((student: { id: number; name: string; has_signed?: boolean }) => (
+              {students?.map((student: { id: number; name: string; has_signed?: boolean }) => (
                 <li key={student.id} className='course-student-item'>
                   <span className='student-name'>{student.name}</span>
                   <div className='btn-cont'>

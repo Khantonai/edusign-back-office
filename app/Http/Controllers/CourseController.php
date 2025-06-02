@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Course;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Cache;
-        use App\Models\Presence;
+use App\Models\Presence;
 
 
 class CourseController extends Controller
@@ -25,7 +25,7 @@ class CourseController extends Controller
             'user_id' => auth()->id(),
             'icon' => $request->icon
         ]);
-        
+
 
         if ($request->filled('student_ids')) {
             $course->students()->attach($request->student_ids);
@@ -96,6 +96,35 @@ class CourseController extends Controller
         ]);
     }
 
+    public function showJson($id)
+    {
+        $course = Course::with([
+            'students' => function ($query) {
+                $query->select('users.id', 'users.name');
+            }
+        ])->findOrFail($id);
+
+
+        $students = $course->students->map(function ($student) use ($course) {
+            $hasSigned = Presence::where('user_id', $student->id)
+                ->where('course_id', $course->id)
+                ->exists();
+
+            return [
+                'id' => $student->id,
+                'name' => $student->name,
+                'has_signed' => $hasSigned,
+            ];
+        });
+
+        return response()->json([
+            'id' => $course->id,
+            'name' => $course->name,
+            'icon' => $course->icon,
+            'students' => $students,
+        ]);
+    }
+
     public function generateToken(Request $request)
     {
         $request->validate([
@@ -108,19 +137,25 @@ class CourseController extends Controller
             abort(403, 'Non autorisé.');
         }
 
+        foreach (Cache::get('active_tokens_for_course:' . $course->id, []) as $oldToken) {
+            Cache::forget("presence_token:{$oldToken}");
+        }
+
         $token = \Illuminate\Support\Str::random(32);
+        $expiresAt = now()->addMinutes(2);
 
-        Cache::put("presence_token:{$token}", $course->id, now()->addMinutes(2));
+        Cache::put("presence_token:{$token}", $course->id, $expiresAt);
 
+
+        Cache::put("active_tokens_for_course:" . $course->id, [$token], $expiresAt);
 
         $qr = (string) \SimpleSoftwareIO\QrCode\Facades\QrCode::size(300)->generate($token);
 
         return response()->json([
             'qr' => $qr,
             'token' => $token,
-            'expires_at' => now()->addMinutes(2),
+            'expires_at' => $expiresAt,
         ]);
     }
 }
 
-    

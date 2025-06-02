@@ -14,11 +14,13 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
+    Route::get('/api/courses/{id}', action: [CourseController::class, 'showJson'])->middleware(['professor']);
+
 
     Route::get('courses', [CourseController::class, 'index'])->name('courses');
     
-    Route::post('/presence/prof-sign', [PresenceController::class, 'profMark'])->middleware('auth');
-    Route::post('/presence/revoke', [PresenceController::class, 'revoke'])->middleware('auth');
+    Route::post('/presence/prof-sign', [PresenceController::class, 'profMark']);
+    Route::post('/presence/revoke', [PresenceController::class, 'revoke']);
 
     Route::get('courses/create', function () {
         return Inertia::render('courses/create');
