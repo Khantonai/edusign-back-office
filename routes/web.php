@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\PresenceSessionController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Api\PresenceController;
 
 
 Route::get('/', function () {
@@ -12,9 +13,12 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+
+
+    Route::get('courses', [CourseController::class, 'index'])->name('courses');
+    
+    Route::post('/presence/prof-sign', [PresenceController::class, 'profMark'])->middleware('auth');
+    Route::post('/presence/revoke', [PresenceController::class, 'revoke'])->middleware('auth');
 
     Route::get('courses/create', function () {
         return Inertia::render('courses/create');
@@ -24,12 +28,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('courses/create', [CourseController::class, 'store'])->middleware(['professor']);
 
-    Route::get('/courses', [CourseController::class, 'index'])->middleware(['professor'])->name('courses.index');
     Route::get('/courses/{course}', [CourseController::class, 'show'])->middleware(['professor'])->name('courses.show');
 
-    // Route::post('/presence-sessions', [PresenceSessionController::class, 'store'])->middleware(['professor'])->name('presence-sessions.store');
 
-    Route::post('/courses/generate-token', [CourseController::class, 'generateToken'])->middleware(['professor'])->name('courses.generate-token');
+    Route::post('/courses/generate-token', action: [CourseController::class, 'generateToken'])->middleware(['professor'])->name('courses.generate-token');
 });
 
 

@@ -2,11 +2,11 @@ import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, Sideba
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 
-export function NavMain({ items = [] }: { items: NavItem[] }) {
+export function NavMain({ items = [] }: { items: (NavItem & { preserveState?: boolean })[] }) {
     const page = usePage();
     return (
         <SidebarGroup className="px-2 py-0">
-            <SidebarGroupLabel>Platform</SidebarGroupLabel>
+            <SidebarGroupLabel>Gestion des cours</SidebarGroupLabel>
             <SidebarMenu>
                 {items.map((item) => (
                     <SidebarMenuItem key={item.title}>
@@ -14,7 +14,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                             asChild isActive={item.href === page.url}
                             tooltip={{ children: item.title }}
                         >
-                            <Link href={item.href} prefetch>
+                            <Link href={item.href} preserveState={item.preserveState || false}>
                                 {item.icon && <item.icon />}
                                 <span>{item.title}</span>
                             </Link>

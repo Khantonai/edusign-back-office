@@ -68,6 +68,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
     *,
     ::after,
     ::before,
@@ -156,4 +157,234 @@
     body {
         @apply bg-background text-foreground;
     }
+}
+
+main {
+    height: calc(100vh - 4rem);
+}
+
+button {
+    cursor: pointer;
+}
+
+
+#course-list {
+    /* background-color: red; */
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#course-list li {
+    border: solid 1px lightgray;
+    border-radius: var(--radius);
+    padding: 10px 20px;
+    width: 200px;
+}
+
+#course-list li a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#course-list .course-icon {
+    font-size: 80px;
+}
+
+#course-list .course-name {
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+}
+
+#course-create-form {
+    display: flex;
+    gap: 10px;
+    padding: 20px;
+    border-radius: var(--radius);
+    width: 100%;
+    overflow: hidden;
+}
+
+
+
+
+#emoji-button {
+    font-size: 150px;
+    display: flex;
+    transition: all 0.3s ease-in-out;
+    align-items: center;
+    gap: 10px;
+    height: 160px;
+}
+
+#add-emoji {
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+    width: 0;
+    height: 40px;
+}
+
+#emoji-button:hover #add-emoji {
+    opacity: 1;
+    width: 40px;
+}
+
+#close-emoji {
+    height: 40px;
+    width: 40px;
+}
+
+#course-name {
+    border: none;
+    outline: none;
+    box-shadow: none;
+
+    font-size: 24px;
+    font-weight: 600;
+    /* color: var(--color-primary-foreground); */
+    /* width: 100%; */
+    max-width: 100%;
+    text-align: center;
+
+    resize: none;
+    height: fit-content;
+}
+
+#course-creation {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    width: 250px;
+    gap: 30px;
+    align-items: center;
+}
+
+#students-selection {
+    /* overflow-y: scroll; */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 10px;
+    gap: 10px;
+}
+
+#students-list {
+    overflow-y: scroll;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.student-item {
+    /* padding: 5px 10px; */
+    border-radius: var(--radius);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.student-item>span {
+    margin: 5px 0 5px 10px;
+    flex: 1;
+    border-right: 1px solid lightgray;
+
+}
+
+.student-item button {
+    /* border-left: 1px solid lightgray; */
+    padding: 5px 10px;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    transition: all 0.1s ease-in-out;
+}
+
+.student-item button:hover {
+    background-color: var(--color-destructive-foreground);
+    color: var(--color-background);
+}
+
+
+#course-student-list {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+}
+
+.course-student-item {
+    border: solid 1px lightgray;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+.course-student-item .student-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-block: 40px;
+}
+
+.course-student-item .btn-cont {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    gap: 10px;
+    align-items: center;
+}
+
+.course-student-item .btn-cont button {
+    padding: 5px 10px;
+    font-size: 14px;
+    width: 90px;
+    border-radius: var(--radius);
+    transition: all 0.3s ease-in-out;
+}
+
+.course-student-item .btn-cont .sign-btn {
+    background-color: var(--color-chart-4);
+}
+
+.course-student-item .btn-cont .sign-btn:hover {
+    background-color: var(--color-chart-5);
+}
+
+.course-student-item .btn-cont .revoke-btn {
+    color: white;
+    background-color: var(--color-destructive);
+}
+
+.course-student-item .btn-cont .revoke-btn:hover {
+    background-color: darkred;
+}
+
+#qrcode, #qrcode svg {
+    width: 100%;
+}
+
+.btn {
+    background-color: var(--color-chart-4);
+    padding: 5px 20px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn:hover {
+    background-color: var(--color-chart-5);
+}
+
+
+.error {
+    color: var(--color-destructive-foreground);
+    font-size: 14px;
+    font-weight: 500;
 }
