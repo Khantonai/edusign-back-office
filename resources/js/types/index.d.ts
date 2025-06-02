@@ -41,3 +41,14 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+interface Course {
+  id: number;
+  name: string;
+  students: Array<{
+    id: number;
+    name: string;
+    has_signed?: boolean;
+  }>;
+  icon: string;
+}
