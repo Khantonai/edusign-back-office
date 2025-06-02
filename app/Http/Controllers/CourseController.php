@@ -17,12 +17,15 @@ class CourseController extends Controller
             'name' => 'required|string|max:255',
             'student_ids' => 'nullable|array',
             'student_ids.*' => 'exists:users,id',
+            'icon' => 'required|string|max:1'
         ]);
 
         $course = Course::create([
             'name' => $request->name,
             'user_id' => auth()->id(),
+            'icon' => $request->icon
         ]);
+        
 
         if ($request->filled('student_ids')) {
             $course->students()->attach($request->student_ids);
@@ -53,10 +56,6 @@ class CourseController extends Controller
     public function index()
     {
         $user = auth()->user();
-
-        if ($user->role !== 'professor') {
-            abort(403, 'Seuls les professeurs peuvent voir la liste des cours.');
-        }
 
         $courses = Course::where('user_id', $user->id)->get();
 
@@ -92,6 +91,7 @@ class CourseController extends Controller
                 'id' => $course->id,
                 'name' => $course->name,
                 'students' => $students,
+                'icon' => $course->icon,
             ],
         ]);
     }
@@ -110,15 +110,10 @@ class CourseController extends Controller
 
         $token = \Illuminate\Support\Str::random(32);
 
-        // Stocker le token lié au course_id en cache (expire dans 2 minutes)
         Cache::put("presence_token:{$token}", $course->id, now()->addMinutes(2));
 
-        $payload = json_encode([
-            'url' => 'http://' . env('IP_ADDRESS') . ':' . env('APP_PORT') . '/api/presence/mark',
-            'token' => $token,
-        ]);
 
-        $qr = (string) \SimpleSoftwareIO\QrCode\Facades\QrCode::size(300)->generate($payload);
+        $qr = (string) \SimpleSoftwareIO\QrCode\Facades\QrCode::size(300)->generate($token);
 
         return response()->json([
             'qr' => $qr,
@@ -126,7 +121,6 @@ class CourseController extends Controller
             'expires_at' => now()->addMinutes(2),
         ]);
     }
-
 }
 
     
