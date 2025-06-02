@@ -14,3 +14,4 @@ Route::get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->post('/presence/mark', [PresenceController::class, 'studentMark']);
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register'])->middleware('api');
