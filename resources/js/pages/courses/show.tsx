@@ -94,10 +94,13 @@ export default function CourseShow() {
         </section>
 
         <section id='students-selection'>
-          <div style={{display: "flex", flexDirection: "column", overflow: "hidden"}}>
-            <p>Étudiants inscrits</p>
+          <div className='flex flex-col justify-between align-center gap-4'>
+            <div className='flex justify-between items-end'>
+              <p>Étudiants inscrits</p>
+              <button onClick={refreshCourse} className='btn'>Rafraîchir la liste</button>
+            </div>
             <ul id='course-student-list'>
-              {students?.map((student: { id: number; name: string; has_signed?: boolean }) => (
+              {students.length > 0 ? students?.map((student: { id: number; name: string; has_signed?: boolean }) => (
                 <li key={student.id} className='course-student-item'>
                   <span className='student-name'>{student.name}</span>
                   <div className='btn-cont'>
@@ -110,7 +113,9 @@ export default function CourseShow() {
                     </button>
                   </div>
                 </li>
-              ))}
+              ))
+                : <p className='course-student-item'>Pas d'étudiants inscrits</p>
+              }
             </ul>
           </div>
         </section>
