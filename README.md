@@ -44,7 +44,4 @@ php artisan serve --host=0.0.0.0
 link to the mobile app repository:
 https://github.com/Khantonai/edusign-mobile-app[https://github.com/Khantonai/edusign-mobile-app]
 
-## 🧪 Development
-
-- Run `php artisan serve --host=0.0.0.0` to make the server accessible over local network
 
