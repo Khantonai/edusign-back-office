@@ -34,6 +34,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
     Route::post('/courses/generate-token', action: [CourseController::class, 'generateToken'])->middleware(['professor'])->name('courses.generate-token');
+
+    Route::delete('/courses/{course}', [CourseController::class, 'destroy'])->middleware(['professor'])->name('courses.destroy');
 });
 
 

@@ -157,5 +157,19 @@ class CourseController extends Controller
             'expires_at' => $expiresAt,
         ]);
     }
+
+    public function destroy($id)
+    {
+        $user = auth()->user();
+        $course = Course::findOrFail($id);
+
+        if ($user->role !== 'professor' || $course->user_id !== $user->id) {
+            abort(403, 'Accès non autorisé.');
+        }
+
+        $course->delete();
+
+        return response()->json(['message' => 'Cours supprimé avec succès.']);
+    }
 }
 
